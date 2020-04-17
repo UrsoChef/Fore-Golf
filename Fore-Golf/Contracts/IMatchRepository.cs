@@ -1,11 +1,11 @@
 ﻿using Fore_Golf.Interfaces;
-using ForeGolf.Data;
+using Fore_Golf.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ForeGolf.Contracts
+namespace Fore_Golf.Contracts
 {
     public interface IMatchRepository : IRepositoryBase<Match>
     {

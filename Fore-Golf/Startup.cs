@@ -12,6 +12,10 @@ using Fore_Golf.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Fore_Golf.Contracts;
+using Fore_Golf.Repositories;
+using AutoMapper;
+using ForeGolf.Mapping;
 
 namespace Fore_Golf
 {
@@ -30,6 +34,15 @@ namespace Fore_Golf
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            //AEE-Add references for Repository to Contracts to Startup file
+            services.AddScoped<IGolferRepository, GolferRepository>();
+            services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<IMatchRepository, MatchRepository>();
+
+            //AEE-services for automater
+            services.AddAutoMapper(typeof(MappingTable));
+
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();

@@ -1,11 +1,11 @@
-﻿using Fore_Golf.Data;
-using ForeGolf.Contracts;
-using ForeGolf.Data;
+﻿using Fore_Golf.Interfaces;
+using Fore_Golf.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fore_Golf.Contracts;
 
 namespace Fore_Golf.Repositories
 {

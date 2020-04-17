@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ForeGolf.Models
+namespace Fore_Golf.Models
 {
     public class MatchViewModel
     {

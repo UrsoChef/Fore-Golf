@@ -5,14 +5,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ForeGolf.Data
+namespace Fore_Golf.Data
 {
     public class Golfer
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; }
-        public int Handicap { get; set; }
-        public DateTime DateJoined { get; set; }
+        public int Handicap { get; set; } = 0;
+        public DateTime DateJoined { get; set; } = DateTime.Now;
         public string Email { get; set; }
     }
 }

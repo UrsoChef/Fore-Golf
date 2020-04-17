@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using ForeGolf.Data;
-using ForeGolf.Models;
+using Fore_Golf.Data;
+using Fore_Golf.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

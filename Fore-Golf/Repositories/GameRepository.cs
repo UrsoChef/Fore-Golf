@@ -1,6 +1,5 @@
-﻿using Fore_Golf.Data;
-using ForeGolf.Contracts;
-using ForeGolf.Data;
+﻿using Fore_Golf.Contracts;
+using Fore_Golf.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Fore_Golf.Repositories
 {
-    public class GameRepository : IGameRepository
+    public class GameRepository : IGameRepository 
 
     {
         private readonly ApplicationDbContext _db;
