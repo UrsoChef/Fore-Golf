@@ -14,6 +14,5 @@ namespace Fore_Golf.Data
         public string Location { get; set; }
         public bool? Status { get; set; }
         public List<Game> Games { get; set; } = new List<Game>();
-        public List<Golfer> Golfers { get; set; } = new List<Golfer>();
     }
 }

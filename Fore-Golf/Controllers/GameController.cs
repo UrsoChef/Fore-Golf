@@ -8,6 +8,7 @@ using Fore_Golf.Data;
 using Fore_Golf.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
@@ -111,6 +112,114 @@ namespace Fore_Golf.Controllers
             }
         }
 
+        public async Task<ActionResult> ListGolfers(Guid id)
+            {
+                var isExists = await _gameRepo.IsExists(id);
+                if (!isExists)
+                {
+                    return NotFound();
+                }
+
+                var model = new List<GameGolferStatusViewModel>();
+
+                var golfers = await _golferRepo.FindAll();
+                var gameGolfers = (await _gameGolferRepo.FindAllGolfersInGame(id)).Select(gg => gg.Golfer.Id);
+
+                foreach (var golfer in golfers)
+                {
+                    model.Add(new GameGolferStatusViewModel()
+                    {
+                        GameId = id,
+                        Golfer = _mapper.Map<Golfer, GolferViewModel>(golfer),
+                        IsInGame = gameGolfers.Contains(golfer.Id),
+                    });
+                }
+
+                return View(model);
+            }
+
+        public async Task<ActionResult> AddGolferToGame(Guid id, Guid golferid)
+        {
+            var isExists = await _gameGolferRepo.CheckGolferInGame(id, golferid);
+            if (!isExists)
+            {
+                var newGolferInGame = new GameGolferViewModel
+                {
+                    Game = await _gameRepo.FindByID(id),
+                    Golfer = await _golferRepo.FindByID(golferid),
+                };
+                var addGolfer = _mapper.Map<GameGolfer>(newGolferInGame);
+                await _gameGolferRepo.Create(addGolfer);
+            }
+
+            return RedirectToAction(nameof(ListGolfers), new { id });
+        }
+
+        public async Task<ActionResult> RemoveGolferFromGame(Guid id, Guid golferid)
+        {
+            var isExists = await _gameGolferRepo.CheckGolferInGame(id, golferid);
+            if (isExists)
+            {
+                var golfer = await _gameGolferRepo.FindGolferInGame(id, golferid);
+                var removeGolfer = _mapper.Map<GameGolfer>(golfer);
+                await _gameGolferRepo.Delete(removeGolfer);
+            }
+
+            return RedirectToAction(nameof(ListGolfers), new { id });
+        }
+
+        // GET: Game/SetScore
+        public async Task<ActionResult> SetScore(Guid id)
+        {
+            var isExists = await _gameGolferRepo.CheckGame(id);
+            if (!isExists)
+            {
+                return NotFound();
+            }
+
+            var gameGolfers = await _gameGolferRepo.FindAllGolfersInGame(id);
+            var model = _mapper.Map<ICollection<SetScoreViewModel>>(gameGolfers);
+            return View(model);
+        }
+
+        // POST: Game/SetScore
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SetScore(SetScoreViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("", "Set Scores: Model state is invalid");
+                    return View(model);
+                }
+                if (model.Id == null)
+                {
+                    ModelState.AddModelError("", "Set Scores: No ID");
+                    return View(model);
+                }
+                var golferGameIds = await _gameGolferRepo.FindGolferInGame(model.GameId, model.GolferId);
+                model.Id = golferGameIds.Id;
+                var gameGolfer = await _gameGolferRepo.FindByID(model.Id);
+                gameGolfer.Score = model.Score;
+                var isSuccess = await _gameGolferRepo.Update(gameGolfer);
+
+                if (!isSuccess)
+                {
+                    ModelState.AddModelError("", "Set Scores: Unable to update the score");
+                    return View(model);
+                }
+                return RedirectToAction(nameof(SetScore),model.GameId);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Set Scores: Something went wrong in setting the score");
+                return View(model);
+            }
+        }
+
+
         // GET: Game/Edit/5
         public ActionResult Edit(int id)
         {
@@ -155,49 +264,6 @@ namespace Fore_Golf.Controllers
             {
                 return View();
             }
-        }
-
-        public async Task<ActionResult> ListGolfers(Guid id)
-            {
-                var isExists = await _gameRepo.IsExists(id);
-                if (!isExists)
-                {
-                    return NotFound();
-                }
-
-                var model = new List<GameGolferStatusViewModel>();
-
-                var golfers = await _golferRepo.FindAll();
-                var gameGolfers = (await _gameGolferRepo.FindAllGolfersInGame(id)).Select(gg => gg.Golfer.Id);
-
-                foreach (var golfer in golfers)
-                {
-                    model.Add(new GameGolferStatusViewModel()
-                    {
-                        GameId = id,
-                        Golfer = _mapper.Map<Golfer, GolferViewModel>(golfer),
-                        IsInGame = gameGolfers.Contains(golfer.Id),
-                    });
-                }
-
-                return View(model);
-            }
-
-        public async Task<ActionResult> AddGolferToGame(Guid id, Guid golferid)
-        {
-            var isExists = await _gameGolferRepo.CheckGolferInGame(id, golferid);
-            if (!isExists)
-            {
-                var newGolferInGame = new GameGolferViewModel
-                {
-                    Game = await _gameRepo.FindByID(id),
-                    Golfer = await _golferRepo.FindByID(golferid),
-                };
-                var addGolfer = _mapper.Map<GameGolfer>(newGolferInGame);
-                await _gameGolferRepo.Create(addGolfer);
-            }
-
-            return RedirectToAction(nameof(ListGolfers));
         }
     }
 }

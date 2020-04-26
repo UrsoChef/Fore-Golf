@@ -42,7 +42,7 @@ namespace Fore_Golf.Repositories
             return match;
         }
 
-        public async Task<ICollection<Match>> GetGolfersByGolferandGame(Guid id)
+        public Task<ICollection<Match>> GetGolfersByGolferandGame(Guid id)
         {
             throw new NotImplementedException();
         }

@@ -9,8 +9,10 @@ namespace Fore_Golf.Contracts
 {
     public interface IGameGolferRepository : IRepositoryBase<GameGolfer>
     {
-        Task<bool> CheckGolferInGame(Guid gameid, Guid golferid);
+        Task<bool> CheckGolferInGame(Guid gameid, Guid golferid); 
+        Task<bool> CheckGame(Guid gameid);
         Task<IEnumerable<GameGolfer>> FindAllGolfersInGame(Guid gameid);
+        Task<ICollection<GameGolfer>> FindGame(Guid gameid);
         Task<GameGolfer> FindGolferInGame(Guid gameid, Guid golferid);
     }
 }

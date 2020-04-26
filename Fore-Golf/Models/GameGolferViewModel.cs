@@ -20,4 +20,13 @@ namespace Fore_Golf.Models
         public GolferViewModel Golfer { get; set; }
         public bool IsInGame { get; set; } = false;
     }
+
+    public class SetScoreViewModel
+    {
+        public Guid Id { get; set; }
+        public Guid GameId { get; set; }
+        public GolferViewModel Golfer { get; set; }
+        public Guid GolferId { get; set; }
+        public int Score { get; set; }
+    }
 }

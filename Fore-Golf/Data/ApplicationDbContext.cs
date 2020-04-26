@@ -14,7 +14,7 @@ namespace Fore_Golf.Data
         {
         }
         public DbSet<Golfer> Golfers { get; set; }
-        public DbSet<GameGolfer> GolferGames { get; set; }
+        public DbSet<GameGolfer> GameGolfers { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<Match> Matches { get; set; }
     }

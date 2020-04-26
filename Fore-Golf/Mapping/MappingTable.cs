@@ -16,6 +16,7 @@ namespace ForeGolf.Mapping
             CreateMap<Match, MatchViewModel>().ReverseMap();
             CreateMap<Golfer, GolferViewModel>().ReverseMap();
             CreateMap<GameGolfer, GameGolferViewModel>().ReverseMap();
+            CreateMap<GameGolfer, SetScoreViewModel>().ReverseMap();
         }
     }
 }

@@ -11,8 +11,10 @@ namespace Fore_Golf.Data
         public Guid Id { get; set; } = Guid.NewGuid();
         //[ForeignKey("GameId")]
         public Game Game { get; set; }
+        public Guid GameId { get; set; }
         //[ForeignKey("GolferId")]
         public Golfer Golfer { get; set; }
+        public Guid GolferId { get; set; }
         public int Score { get; set; }
     }
 }

@@ -5,6 +5,7 @@
 }
 
 <h1>Golfer List</h1>
+
 <table class="table">
     <thead>
         <tr>
@@ -32,13 +33,13 @@
                 <td>
                     @if (item.IsInGame)
                     {
-                        <a class="btn btn-primary">Golfer in game</a>
+                        <a class="btn btn-danger" asp-action="RemoveGolferFromGame" asp-route-id="@item.GameId" asp-route-golferid="@item.Golfer.Id">Remove Golfer</a>
                     }
                     else
                     {
-                        @item.IsInGame
-                        @*<a class="btn btn-danger" asp-action="AddGolferToGame" asp-route-id="@item.GameId" asp-route-golferid="@item.Golfer.Id">Add Golfer</a>*@
+                        <a class="btn btn-success" asp-action="AddGolferToGame" asp-route-id="@item.GameId" asp-route-golferid="@item.Golfer.Id">Add Golfer</a>
                     }
+                    @*@Html.DisplayFor(modelItem => item.IsInGame)*@
                 </td>
             </tr>
         }

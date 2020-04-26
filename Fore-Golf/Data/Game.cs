@@ -12,7 +12,7 @@ namespace Fore_Golf.Data
         public Guid Id { get; set; }
         public DateTime GameDate { get; set; }
         public string Location { get; set; }
-        [ForeignKey("MatchId")]
         public Match Match { get; set; }
+        public Guid MatchId { get; set; }
     }
 }

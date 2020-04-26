@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Fore_Golf.Models.SetScoreViewModel>
+
+@{
+    ViewData["Title"] = "SetScore";
+}
+
+<h1>Enter player scores</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Handicap
+            </th>
+            <th>
+                Score
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Golfer.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Golfer.Handicap)
+                </td>
+                <td>
+                    <form class="form-inline" method="post">
+                        <input name="Score" type="number" id="Score" placeholder="@item.Score">
+                        <button type="submit" class="btn btn-primary" asp-route-gameid="@item.GameId" asp-route-golferid="@item.GolferId">Update</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
