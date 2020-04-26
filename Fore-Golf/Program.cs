@@ -22,5 +22,18 @@ namespace Fore_Golf
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+            //adding a logger to track SQL queries?
+        //public static IHostBuilder CreateHostBuilder(string[] args) =>
+        //    Host.CreateDefaultBuilder(args)
+        //        .ConfigureLogging(logging =>
+        //        {
+        //            logging.ClearProviders();
+        //            logging.AddConsole();
+        //        })
+        //    .ConfigureWebHostDefaults(webBuilder =>
+        //    {
+        //        webBuilder.UseStartup<Startup>();
+        //    });
     }
 }

@@ -4,14 +4,16 @@ using Fore_Golf.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fore_Golf.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200418111116_addedstatusinmatchtable")]
+    partial class addedstatusinmatchtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +24,6 @@ namespace Fore_Golf.Data.Migrations
             modelBuilder.Entity("Fore_Golf.Data.Game", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("GameDate")
@@ -31,26 +32,7 @@ namespace Fore_Golf.Data.Migrations
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("MatchId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MatchId");
-
-                    b.ToTable("Games");
-                });
-
-            modelBuilder.Entity("Fore_Golf.Data.GameGolfer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("GameId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("GolferId")
+                    b.Property<Guid>("MatchId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Score")
@@ -58,11 +40,7 @@ namespace Fore_Golf.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("GolferId");
-
-                    b.ToTable("GolferGames");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("Fore_Golf.Data.Golfer", b =>
@@ -91,6 +69,22 @@ namespace Fore_Golf.Data.Migrations
                     b.HasIndex("MatchId");
 
                     b.ToTable("Golfers");
+                });
+
+            modelBuilder.Entity("Fore_Golf.Data.GolferGame", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GolferId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GolferGames");
                 });
 
             modelBuilder.Entity("Fore_Golf.Data.Match", b =>
@@ -317,18 +311,9 @@ namespace Fore_Golf.Data.Migrations
                 {
                     b.HasOne("Fore_Golf.Data.Match", "Match")
                         .WithMany("Games")
-                        .HasForeignKey("MatchId");
-                });
-
-            modelBuilder.Entity("Fore_Golf.Data.GameGolfer", b =>
-                {
-                    b.HasOne("Fore_Golf.Data.Game", "Game")
-                        .WithMany()
-                        .HasForeignKey("GameId");
-
-                    b.HasOne("Fore_Golf.Data.Golfer", "Golfer")
-                        .WithMany()
-                        .HasForeignKey("GolferId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Fore_Golf.Data.Golfer", b =>
@@ -336,6 +321,21 @@ namespace Fore_Golf.Data.Migrations
                     b.HasOne("Fore_Golf.Data.Match", null)
                         .WithMany("Golfers")
                         .HasForeignKey("MatchId");
+                });
+
+            modelBuilder.Entity("Fore_Golf.Data.GolferGame", b =>
+                {
+                    b.HasOne("Fore_Golf.Data.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Fore_Golf.Data.Golfer", "Golfer")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -4,14 +4,16 @@ using Fore_Golf.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Fore_Golf.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200422123552_removingmatchidfromgameclass")]
+    partial class removingmatchidfromgameclass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,30 +43,6 @@ namespace Fore_Golf.Data.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("Fore_Golf.Data.GameGolfer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("GameId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("GolferId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("GolferId");
-
-                    b.ToTable("GolferGames");
-                });
-
             modelBuilder.Entity("Fore_Golf.Data.Golfer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -91,6 +69,25 @@ namespace Fore_Golf.Data.Migrations
                     b.HasIndex("MatchId");
 
                     b.ToTable("Golfers");
+                });
+
+            modelBuilder.Entity("Fore_Golf.Data.GolferGame", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GolferId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GolferGames");
                 });
 
             modelBuilder.Entity("Fore_Golf.Data.Match", b =>
@@ -320,22 +317,26 @@ namespace Fore_Golf.Data.Migrations
                         .HasForeignKey("MatchId");
                 });
 
-            modelBuilder.Entity("Fore_Golf.Data.GameGolfer", b =>
-                {
-                    b.HasOne("Fore_Golf.Data.Game", "Game")
-                        .WithMany()
-                        .HasForeignKey("GameId");
-
-                    b.HasOne("Fore_Golf.Data.Golfer", "Golfer")
-                        .WithMany()
-                        .HasForeignKey("GolferId");
-                });
-
             modelBuilder.Entity("Fore_Golf.Data.Golfer", b =>
                 {
                     b.HasOne("Fore_Golf.Data.Match", null)
                         .WithMany("Golfers")
                         .HasForeignKey("MatchId");
+                });
+
+            modelBuilder.Entity("Fore_Golf.Data.GolferGame", b =>
+                {
+                    b.HasOne("Fore_Golf.Data.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Fore_Golf.Data.Golfer", "Golfer")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

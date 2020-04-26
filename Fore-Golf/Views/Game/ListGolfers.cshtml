@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Fore_Golf.Models.GameGolferStatusViewModel>
+
+@{
+    ViewData["Title"] = "ListGolfers";
+}
+
+<h1>Golfer List</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Handicap
+            </th>
+            <th>
+                In Game?
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Golfer.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Golfer.Handicap)
+                </td>
+                <td>
+                    @if (item.IsInGame)
+                    {
+                        <a class="btn btn-primary">Golfer in game</a>
+                    }
+                    else
+                    {
+                        @item.IsInGame
+                        @*<a class="btn btn-danger" asp-action="AddGolferToGame" asp-route-id="@item.GameId" asp-route-golferid="@item.Golfer.Id">Add Golfer</a>*@
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

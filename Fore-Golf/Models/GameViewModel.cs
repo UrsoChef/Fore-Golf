@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Fore_Golf.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,12 +10,14 @@ namespace Fore_Golf.Models
 {
     public class GameViewModel
     {
-        public Guid Id { get; set; }
-        public int Score { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
+        [Display(Name = "Game Date")]
         public DateTime GameDate { get; set; }
-        public GolferViewModel Golfer { get; set; }
-        public Guid GolferId { get; set; }
-        public IEnumerable<SelectListItem> Golfers { get; set; }
-
+        public string Location { get; set; }
+        //public GolferViewModel Golfer { get; set; }
+        //public Guid GolferId { get; set; }
+        //public IEnumerable<SelectListItem> Golfers { get; set; }
+        public Match Match { get; set; }
+        public Guid MatchId { get; set; }
     }
 }

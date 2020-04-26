@@ -10,11 +10,10 @@ namespace Fore_Golf.Data
     public class Match
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public int StartingPosition { get; set; }
-        public DateTime MatchStartDate { get; set; }
-        public DateTime MatchEndDate { get; set; }
-        [ForeignKey("Id")]
-        public Game Game { get; set; }
-        //public Guid GameId { get; set; }
+        public string Name { get; set; }
+        public string Location { get; set; }
+        public bool? Status { get; set; }
+        public List<Game> Games { get; set; } = new List<Game>();
+        public List<Golfer> Golfers { get; set; } = new List<Golfer>();
     }
 }

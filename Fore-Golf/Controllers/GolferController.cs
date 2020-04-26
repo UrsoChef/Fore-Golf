@@ -58,15 +58,17 @@ namespace Fore_Golf.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    ModelState.AddModelError("", "Create Golfer: Model state is invalud");
+                    ModelState.AddModelError("", "Create Golfer: Model state is invalid");
                     return View(model);
                 }
+                var dateCreated = DateTime.Now;
+                model.DateJoined = dateCreated;
                 var golfer = _mapper.Map<Golfer>(model);
                 var isSuccess = await _repo.Create(golfer);
 
                 if (!isSuccess)
                 {
-                    ModelState.AddModelError("", "Create Golfer: Unable to create a new golfer");
+                    ModelState.AddModelError("", "Create Golfer: Unable to Create a new golfer");
                     return View(model);
                 }
 
@@ -130,7 +132,7 @@ namespace Fore_Golf.Controllers
             var isSuccess = await _repo.Delete(golfer);
             if (!isSuccess)
             {
-                ModelState.AddModelError("", "Delete Golfer: Could not delete");
+                ModelState.AddModelError("", "Delete Golfer: Could not Delete");
                 return BadRequest();
             }
             return RedirectToAction(nameof(Index));

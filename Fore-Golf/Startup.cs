@@ -39,6 +39,7 @@ namespace Fore_Golf
             services.AddScoped<IGolferRepository, GolferRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
             services.AddScoped<IMatchRepository, MatchRepository>();
+            services.AddScoped<IGameGolferRepository, GameGolferRepository>();
 
             //AEE-services for automater
             services.AddAutoMapper(typeof(MappingTable));
