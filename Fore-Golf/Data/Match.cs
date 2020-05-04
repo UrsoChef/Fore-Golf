@@ -13,6 +13,7 @@ namespace Fore_Golf.Data
         public string Name { get; set; }
         public string Location { get; set; }
         public bool? Status { get; set; }
-        public List<Game> Games { get; set; } = new List<Game>();
+        //public List<Game> Games { get; set; } = new List<Game>();
+        public IEnumerable<Game> Games { get; set; }
     }
 }

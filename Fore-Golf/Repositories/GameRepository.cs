@@ -41,6 +41,11 @@ namespace Fore_Golf.Repositories
             return game;
         }
 
+        public async Task<ICollection<Game>> GetGamesInMatch(Guid matchid)
+        {
+            return await _db.Games.Include(g => g.MatchId).Where(q => q.MatchId == matchid).ToListAsync();
+        }
+
         public Task<ICollection<Game>> GetScoreByGolferandMatch(Guid id)
         {
             throw new NotImplementedException();

@@ -9,6 +9,6 @@ namespace Fore_Golf.Contracts
 {
     public interface IMatchRepository : IRepositoryBase<Match>
     {
-        Task<ICollection<Match>> GetGolfersByGolferandGame(Guid id);
+        Task<Match> FindGamesAndGolfersInMatch(Guid id);
     }
 }

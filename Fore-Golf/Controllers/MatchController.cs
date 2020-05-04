@@ -15,13 +15,15 @@ namespace Fore_Golf.Controllers
     {
         private readonly IGolferRepository _golferRepo;
         private readonly IGameRepository _gameRepo;
+        private readonly IGameGolferRepository _gameGolferRepo;
         private readonly IMatchRepository _matchRepo;
         private readonly IMapper _mapper;
 
-        public MatchController(IGolferRepository golferRepo, IGameRepository gameRepo, IMatchRepository matchRepo, IMapper mapper)
+        public MatchController(IGolferRepository golferRepo, IGameRepository gameRepo, IGameGolferRepository gameGolferRepo, IMatchRepository matchRepo, IMapper mapper)
         {
             _golferRepo = golferRepo;
             _gameRepo = gameRepo;
+            _gameGolferRepo = gameGolferRepo;
             _matchRepo = matchRepo;
             _mapper = mapper;
         }
@@ -36,8 +38,13 @@ namespace Fore_Golf.Controllers
         // GET: Match/Details/5
         public async Task<ActionResult> Details(Guid id)
         {
-            var match = await _matchRepo.FindByID(id);
-            var model = _mapper.Map<MatchViewModel>(match);
+            //var match = await _matchRepo.FindByID(id);
+            //var model = _mapper.Map<MatchViewModel>(match);
+            //return View(model);
+
+            Match matchDetails = await _matchRepo.FindGamesAndGolfersInMatch(id);
+            MatchViewModel model = _mapper.Map<MatchViewModel>(matchDetails);
+            //model.NumberOfGames = matchDetails.Games.Count();
             return View(model);
         }
 

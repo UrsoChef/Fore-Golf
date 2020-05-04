@@ -1,0 +1,47 @@
+﻿@model Fore_Golf.Models.GameScoresViewModel
+
+@{
+    ViewData["Title"] = "ViewScores";
+}
+
+<h1>View Scores</h1>
+
+<a asp-controller="Match" asp-action="Details" asp-route-id="@Model.MatchId">Return to match lobby</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Golfer Name
+            </th>
+            <th>
+                Handicap
+            </th>
+            <th>
+                Gross Score
+            </th>
+            <th>
+                Net Score
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.GolferScores)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Golfer.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Golfer.Handicap)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Score)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NetScore)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

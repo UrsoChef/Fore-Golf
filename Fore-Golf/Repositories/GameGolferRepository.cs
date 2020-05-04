@@ -62,7 +62,7 @@ namespace Fore_Golf.Repositories
 
         public async Task<IEnumerable<GameGolfer>> FindAllGolfersInGame(Guid gameid)
         {
-            return await _db.GameGolfers.Include(g => g.Golfer).Where(q => q.Game.Id == gameid).ToListAsync();
+            return await _db.GameGolfers.Include(g => g.Golfer).Include(g => g.Game).Where(q => q.Game.Id == gameid).ToListAsync();
             //var golfers = await FindAll();
             //var golfersInGame = golfers.Where(q => q.Game.Id == gameid).ToList();
             //return golfersInGame;
@@ -89,6 +89,23 @@ namespace Fore_Golf.Repositories
         {
             _db.GameGolfers.Update(entity);
             return await Save();
+        }
+
+        public async Task<IEnumerable<GameGolfer>> FindAllInMatch(Guid matchid)
+        {
+            return await _db.GameGolfers.Include(g => g.Golfer).Where(q => q.Game.MatchId == matchid).ToListAsync();
+        }
+
+        public async Task<IEnumerable<GameGolfer>> FindLatestGameandGolfersInMatch(Guid matchid, Guid gameid)
+        {
+            //objective of this function is to 
+            //> take gameid input (consider taking matchid instead of game?)
+            //> find all the games under the match with this gameid 
+            //> find last game amongst list
+            //> return latest gamegolfer list, ket is golfers
+            IEnumerable<GameGolfer> gameGolfers = await _db.GameGolfers.Include(g => g.Golfer).Where(q => q.Game.MatchId == matchid).ToListAsync();
+            GameGolfer latestGame = gameGolfers.Where(g => g.GameId != gameid).Last();
+            return gameGolfers.Where(gg => gg.GameId == latestGame.GameId);
         }
     }
 }

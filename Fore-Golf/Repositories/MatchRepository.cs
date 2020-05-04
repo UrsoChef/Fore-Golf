@@ -42,9 +42,10 @@ namespace Fore_Golf.Repositories
             return match;
         }
 
-        public Task<ICollection<Match>> GetGolfersByGolferandGame(Guid id)
+        public async Task<Match> FindGamesAndGolfersInMatch(Guid id)
         {
-            throw new NotImplementedException();
+            var matches = await _db.Matches.Include(m => m.Games).ThenInclude(g => g.GameGolfers).ThenInclude(gg => gg.Golfer).FirstOrDefaultAsync(m => m.Id == id);
+            return matches;
         }
 
         public async Task<bool> IsExists(Guid id)

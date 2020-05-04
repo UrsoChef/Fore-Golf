@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Fore_Golf.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,19 +13,9 @@ namespace Fore_Golf.Models
         public string Name { get; set; }
         public string Location { get; set; }
         public bool? Status { get; set; }
-        public GolferViewModel Golfer { get; set; }
-        public Guid GolferId { get; set; }
-        public IEnumerable<SelectListItem> Golfers { get; set; }
-        public GameViewModel Game { get; set; }
-        public Guid GameId { get; set; }
-        public IEnumerable<SelectListItem> Games { get; set; }
-    }
-    public class MatchSummaryViewModel
-    {
-        public string Name { get; set; }
-        public string Location { get; set; }
-        public bool? Status { get; set; }
-        public List<GameViewModel> Games { get; set; }
-        public List<GolferViewModel> Golfers { get; set; }
+        public IEnumerable<GolferViewModel> Golfers { get; set; } = new List<GolferViewModel>();
+        public IEnumerable<GameViewModel> Games { get; set; } = new List<GameViewModel>();
+        public int NumberOfGames { get; set; }
+        public int NumberOfPlayers { get; set; }
     }
 }

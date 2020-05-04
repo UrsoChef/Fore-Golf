@@ -154,6 +154,27 @@ namespace Fore_Golf.Controllers
 
             return RedirectToAction(nameof(ListGolfers), new { id });
         }
+        public async Task<ActionResult> CopyGolfersFromLastGame(Guid matchid, Guid gameid)
+        {
+            Game existingGame = await _gameRepo.FindByID(gameid);
+            IEnumerable<GameGolfer> lastGame = await _gameGolferRepo.FindLatestGameandGolfersInMatch(matchid, gameid);
+            foreach (GameGolfer item in lastGame)
+            {
+                bool isExists = await _gameGolferRepo.CheckGolferInGame(gameid, item.GolferId);
+                if (!isExists)
+                {
+                    GameGolferViewModel newGolferInGame = new GameGolferViewModel
+                    {
+                        Game = existingGame,
+                        Golfer = item.Golfer,
+                        Score = 0,
+                    };
+                    var addGolfer = _mapper.Map<GameGolfer>(newGolferInGame);
+                    await _gameGolferRepo.Create(addGolfer);
+                }
+            }
+            return RedirectToAction(nameof(Details), new { matchid });
+        }
 
         public async Task<ActionResult> RemoveGolferFromGame(Guid id, Guid golferid)
         {
@@ -168,6 +189,26 @@ namespace Fore_Golf.Controllers
             return RedirectToAction(nameof(ListGolfers), new { id });
         }
 
+        // GET: Game/ViewScores
+        public async Task<ActionResult> ViewScores(Guid id)
+        {
+            var isExists = await _gameGolferRepo.CheckGame(id);
+            if (!isExists)
+            {
+                return NotFound();
+            }
+
+            var gameGolfers = await _gameGolferRepo.FindAllGolfersInGame(id);
+            GameScoresViewModel model = new GameScoresViewModel()
+            {
+                GameId = id,
+                MatchId = gameGolfers.First().Game.MatchId,
+                GolferScores = _mapper.Map<IEnumerable<GolferScoreViewModel>>(gameGolfers),
+            };
+
+            return View(model);
+        }
+
         // GET: Game/SetScore
         public async Task<ActionResult> SetScore(Guid id)
         {
@@ -177,8 +218,8 @@ namespace Fore_Golf.Controllers
                 return NotFound();
             }
 
-            var gameGolfers = await _gameGolferRepo.FindAllGolfersInGame(id);
-            var model = _mapper.Map<ICollection<SetScoreViewModel>>(gameGolfers);
+            IEnumerable<GameGolfer> gameGolfers = await _gameGolferRepo.FindAllGolfersInGame(id);
+            ICollection<SetScoreViewModel> model = _mapper.Map<ICollection<SetScoreViewModel>>(gameGolfers);
             return View(model);
         }
 

@@ -12,7 +12,10 @@ namespace Fore_Golf.Contracts
         Task<bool> CheckGolferInGame(Guid gameid, Guid golferid); 
         Task<bool> CheckGame(Guid gameid);
         Task<IEnumerable<GameGolfer>> FindAllGolfersInGame(Guid gameid);
+        Task<IEnumerable<GameGolfer>> FindAllInMatch(Guid matchid);
         Task<ICollection<GameGolfer>> FindGame(Guid gameid);
         Task<GameGolfer> FindGolferInGame(Guid gameid, Guid golferid);
+        Task<IEnumerable<GameGolfer>> FindLatestGameandGolfersInMatch(Guid matchid, Guid gameid);
+
     }
 }
