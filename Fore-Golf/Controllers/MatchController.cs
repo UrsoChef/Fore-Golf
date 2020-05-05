@@ -48,6 +48,55 @@ namespace Fore_Golf.Controllers
             return View(model);
         }
 
+        // GET: Match/Summary/
+        public async Task<ActionResult> Summary(Guid id)
+        {
+            Match match = await _matchRepo.FindByID(id);
+            if (match.Id == null)
+            {
+                return NotFound();
+            }
+
+            MatchSummaryViewModel model = new MatchSummaryViewModel();
+            var matchGameGolfers = await _gameGolferRepo.FindAllInMatch(id);
+
+            foreach (var item in model)
+            {
+                {
+                    Games = matchGameGolfers.,
+                    GolferScores = _mapper.Map<IEnumerable<GolferScoreViewModel>>(matchGameGolfers),
+                    }
+            };
+            Match matchDetails = await _matchRepo.FindGamesAndGolfersInMatch(id);
+            MatchViewModel model = _mapper.Map<MatchViewModel>(matchDetails);
+            //model.NumberOfGames = matchDetails.Games.Count();
+            return View(model);
+        }
+
+
+        public async Task<ActionResult> CopyGolfersFromLastGame(Guid matchid, Guid gameid)
+        {
+            Game existingGame = await _gameRepo.FindByID(gameid);
+            IEnumerable<GameGolfer> lastGame = await _gameGolferRepo.FindLatestGameandGolfersInMatch(matchid, gameid);
+            Guid id = matchid;
+            foreach (GameGolfer item in lastGame)
+            {
+                bool isExists = await _gameGolferRepo.CheckGolferInGame(gameid, item.GolferId);
+                if (!isExists)
+                {
+                    GameGolferViewModel newGolferInGame = new GameGolferViewModel
+                    {
+                        Game = existingGame,
+                        Golfer = item.Golfer,
+                        Score = 0,
+                    };
+                    var addGolfer = _mapper.Map<GameGolfer>(newGolferInGame);
+                    await _gameGolferRepo.Create(addGolfer);
+                }
+            }
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
         // GET: Match/Create
         public ActionResult Create()
         {

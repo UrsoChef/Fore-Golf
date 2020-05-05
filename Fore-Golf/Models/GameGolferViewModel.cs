@@ -39,6 +39,12 @@ namespace Fore_Golf.Models
         public IEnumerable<GolferScoreViewModel> GolferScores { get; set; }
     }
 
+    public class MatchSummaryViewModel
+    {
+        public IEnumerable<GameViewModel> Games { get; set; }
+        public IEnumerable<GolferScoreViewModel> GolferScores { get; set; }
+    }
+
     public class GolferScoreViewModel
     {
         public GolferViewModel Golfer { get; set; }

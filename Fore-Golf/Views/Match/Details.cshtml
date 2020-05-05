@@ -34,9 +34,7 @@
                 <a asp-action="ListGolfers" class="btn btn-outline-info" asp-controller="Game" asp-route-id="@item.Id">Select Golfers</a> | 
                 <a asp-action="SetScore" class="btn btn-primary" asp-controller="Game" asp-route-id="@item.Id">Enter Scores</a> | 
                 <a asp-action="ViewScores" class="btn btn-dark" asp-controller="Game" asp-route-id="@item.Id">View Scores</a> | 
-                <a asp-action="CopyGolfersFromLastGame" class="btn btn btn-outline-secondary" asp-controller="Game"
-                   asp-route-matchid="@item.MatchId" asp-route-gameid="@item.Id" asp-route-returnurl="Match/Details/@item.MatchId">
-                Copy</a>
+                <a asp-action="CopyGolfersFromLastGame" class="btn btn btn-outline-secondary" asp-route-matchid="@item.MatchId" asp-route-gameid="@item.Id">Copy</a>
             </td>
         </tr>
 }

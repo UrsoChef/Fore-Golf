@@ -103,7 +103,39 @@ namespace Fore_Golf.Controllers
                     ModelState.AddModelError("", "Create Game: Unable to Create a new game");
                     return View(model);
                 }
-                return RedirectToAction(nameof(Index));
+
+                IEnumerable<GameGolfer> lastGame = await _gameGolferRepo.FindLatestGameandGolfersInMatch(game.MatchId, game.Id);
+                foreach (GameGolfer item in lastGame)
+                {
+                    bool isExists = await _gameGolferRepo.CheckGolferInGame(game.Id, item.GolferId);
+                    if (!isExists)
+                    {
+                        GameGolferViewModel newGolferInGame = new GameGolferViewModel
+                        {
+                            Game = game,
+                            Golfer = item.Golfer,
+                            Score = 0,
+                        };
+                        var addGolfer = _mapper.Map<GameGolfer>(newGolferInGame);
+                        bool golferSuccess = await _gameGolferRepo.Create(addGolfer);
+
+                        if (!golferSuccess)
+                        {
+                            ModelState.AddModelError("", "Create Game: Unable to Copy a previous list of Golfers");
+                            continue;
+                        }
+                    }
+                }
+
+
+                //// ```pull all gameGolfer rows for a specific match
+                //IEnumerable<GameGolfer> gameGolfers = await _db.GameGolfers.Include(g => g.Golfer).Where(q => q.Game.MatchId == matchid).ToListAsync();
+                //                // give me the last game played from the list of games in a match, EXCLUDING the new game I just created *gameid*
+                //                GameGolfer latestGame = gameGolfers.Where(g => g.GameId != gameid).Last();
+                //                // return all golfers for the latest game I just created so that I can cope them over
+                //                return gameGolfers.Where(gg => gg.GameId == latestGame.GameId);```
+                Guid id = game.MatchId;
+                return RedirectToAction(nameof(Details), "Match", id);
             }
             catch(Exception ex)
             {
@@ -124,11 +156,13 @@ namespace Fore_Golf.Controllers
 
                 var golfers = await _golferRepo.FindAll();
                 var gameGolfers = (await _gameGolferRepo.FindAllGolfersInGame(id)).Select(gg => gg.Golfer.Id);
+                Game game = await _gameRepo.FindByID(id);
 
                 foreach (var golfer in golfers)
                 {
                     model.Add(new GameGolferStatusViewModel()
                     {
+                        MatchId = game.MatchId,
                         GameId = id,
                         Golfer = _mapper.Map<Golfer, GolferViewModel>(golfer),
                         IsInGame = gameGolfers.Contains(golfer.Id),
@@ -153,27 +187,6 @@ namespace Fore_Golf.Controllers
             }
 
             return RedirectToAction(nameof(ListGolfers), new { id });
-        }
-        public async Task<ActionResult> CopyGolfersFromLastGame(Guid matchid, Guid gameid)
-        {
-            Game existingGame = await _gameRepo.FindByID(gameid);
-            IEnumerable<GameGolfer> lastGame = await _gameGolferRepo.FindLatestGameandGolfersInMatch(matchid, gameid);
-            foreach (GameGolfer item in lastGame)
-            {
-                bool isExists = await _gameGolferRepo.CheckGolferInGame(gameid, item.GolferId);
-                if (!isExists)
-                {
-                    GameGolferViewModel newGolferInGame = new GameGolferViewModel
-                    {
-                        Game = existingGame,
-                        Golfer = item.Golfer,
-                        Score = 0,
-                    };
-                    var addGolfer = _mapper.Map<GameGolfer>(newGolferInGame);
-                    await _gameGolferRepo.Create(addGolfer);
-                }
-            }
-            return RedirectToAction(nameof(Details), new { matchid });
         }
 
         public async Task<ActionResult> RemoveGolferFromGame(Guid id, Guid golferid)
@@ -219,7 +232,12 @@ namespace Fore_Golf.Controllers
             }
 
             IEnumerable<GameGolfer> gameGolfers = await _gameGolferRepo.FindAllGolfersInGame(id);
+            Game game = await _gameRepo.FindByID(id);
             ICollection<SetScoreViewModel> model = _mapper.Map<ICollection<SetScoreViewModel>>(gameGolfers);
+            foreach (var item in model)
+            {
+                item.MatchId = game.MatchId;
+            };
             return View(model);
         }
 
