@@ -1,8 +1,102 @@
-﻿@{
+﻿@model IEnumerable<Fore_Golf.Models.MatchViewModel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Fore Golf!</h1>
+    @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
 </div>
+
+<div class="accordion" id="matchStatus">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Matches in Progress
+                    <span class="badge badge-primary badge-pill">@Model.Count(s => s.Status == null)</span>
+                </button>
+            </h2>
+        </div>
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#matchStatus">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    @foreach (var item in Model)
+                    {
+                        if (item.Status == null)
+                        {
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <a asp-route-id="@item.Id" asp-action="Details" asp-controller="Match" class="card-link">
+                                        <h5 class="card-title">@item.Name</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">@item.Location</h6>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Completed Matches <span class="badge badge-primary badge-pill">@Model.Count(s => s.Status == true)</span>
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#matchStatus">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        @foreach (var item in Model)
+                        {
+                            if (item.Status == true)
+                            {
+                                <div class="card" style="width: 18rem;">
+                                    <div class="card-body">
+                                        <a asp-route-id="@item.Id" asp-action="Details" asp-controller="Match" class="card-link">
+                                            <h5 class="card-title">@item.Name</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">@item.Location</h6>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Cancelled Matches <span class="badge badge-primary badge-pill">@Model.Count(s => s.Status == false)</span>
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#matchStatus">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        @foreach (var item in Model)
+                        {
+                            if (item.Status == false)
+                            {
+                                <div class="card" style="width: 18rem;">
+                                    <div class="card-body">
+                                        <a asp-route-id="@item.Id" asp-action="Details" asp-controller="Match" class="card-link">
+                                            <h5 class="card-title">@item.Name</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">@item.Location</h6>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

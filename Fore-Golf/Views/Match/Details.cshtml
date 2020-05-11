@@ -5,6 +5,9 @@
 }
 
 <h1>Details</h1>
+<p>
+    <a asp-action="Summary" asp-route-id="@Model.Id">View match summary</a>
+</p>
 
 <p>
     <a asp-controller="Game" asp-action="Create" asp-route-matchid="@Model.Id">Create a new game for this match</a>
@@ -22,21 +25,22 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Games) {
-        <tr>
-            <td>
-                @item.Location
-            </td>
-            <td>
-                @item.GameDate
-            </td>
-            <td>
-                <a asp-action="ListGolfers" class="btn btn-outline-info" asp-controller="Game" asp-route-id="@item.Id">Select Golfers</a> | 
-                <a asp-action="SetScore" class="btn btn-primary" asp-controller="Game" asp-route-id="@item.Id">Enter Scores</a> | 
-                <a asp-action="ViewScores" class="btn btn-dark" asp-controller="Game" asp-route-id="@item.Id">View Scores</a> | 
-                <a asp-action="CopyGolfersFromLastGame" class="btn btn btn-outline-secondary" asp-route-matchid="@item.MatchId" asp-route-gameid="@item.Id">Copy</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Games)
+        {
+            <tr>
+                <td>
+                    @item.Location
+                </td>
+                <td>
+                    @item.GameDate
+                </td>
+                <td>
+                    <a asp-action="ListGolfers" class="btn btn-outline-info" asp-controller="Game" asp-route-id="@item.Id">Select Golfers</a> |
+                    <a asp-action="SetScore" class="btn btn-primary" asp-controller="Game" asp-route-id="@item.Id">Enter Scores</a> |
+                    <a asp-action="ViewScores" class="btn btn-dark" asp-controller="Game" asp-route-id="@item.Id">View Scores</a> |
+                    <a asp-action="CopyGolfersFromLastGame" class="btn btn btn-outline-secondary" asp-route-matchid="@item.MatchId" asp-route-gameid="@item.Id">Copy</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

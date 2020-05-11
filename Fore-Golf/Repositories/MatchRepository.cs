@@ -47,6 +47,12 @@ namespace Fore_Golf.Repositories
             var matches = await _db.Matches.Include(m => m.Games).ThenInclude(g => g.GameGolfers).ThenInclude(gg => gg.Golfer).FirstOrDefaultAsync(m => m.Id == id);
             return matches;
         }
+        public async Task<IEnumerable<Golfer>> FindGolfersInMatch(Guid id)
+        {
+            var games = await _db.Games.Include(g => g.GameGolfers).ThenInclude(gg => gg.Golfer).FirstOrDefaultAsync(g => g.MatchId == id);
+            var golfersInMatch = games.GameGolfers.Select(m => m.Golfer);
+            return golfersInMatch;
+        }
 
         public async Task<bool> IsExists(Guid id)
         {

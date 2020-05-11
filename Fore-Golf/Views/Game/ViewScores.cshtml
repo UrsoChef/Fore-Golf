@@ -1,4 +1,4 @@
-﻿@model Fore_Golf.Models.GameScoresViewModel
+﻿@model Fore_Golf.Models.GameGolferScoreViewModel
 
 @{
     ViewData["Title"] = "ViewScores";
@@ -6,7 +6,7 @@
 
 <h1>View Scores</h1>
 
-<a asp-controller="Match" asp-action="Details" asp-route-id="@Model.MatchId">Return to match lobby</a>
+<a asp-controller="Match" asp-action="Details" asp-route-id="@Model.Games.MatchId">Return to match lobby</a>
 
 <table class="table">
     <thead>

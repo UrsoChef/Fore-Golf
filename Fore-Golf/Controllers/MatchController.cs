@@ -44,7 +44,8 @@ namespace Fore_Golf.Controllers
 
             Match matchDetails = await _matchRepo.FindGamesAndGolfersInMatch(id);
             MatchViewModel model = _mapper.Map<MatchViewModel>(matchDetails);
-            //model.NumberOfGames = matchDetails.Games.Count();
+            model.NumberOfGames = matchDetails.Games.Count();
+            model.NumberOfPlayers = matchDetails.Games.SelectMany(g => g.GameGolfers).Select(g => g.Golfer).Distinct().Count();
             return View(model);
         }
 
@@ -57,19 +58,10 @@ namespace Fore_Golf.Controllers
                 return NotFound();
             }
 
-            MatchSummaryViewModel model = new MatchSummaryViewModel();
-            var matchGameGolfers = await _gameGolferRepo.FindAllInMatch(id);
-
-            foreach (var item in model)
-            {
-                {
-                    Games = matchGameGolfers.,
-                    GolferScores = _mapper.Map<IEnumerable<GolferScoreViewModel>>(matchGameGolfers),
-                    }
-            };
-            Match matchDetails = await _matchRepo.FindGamesAndGolfersInMatch(id);
-            MatchViewModel model = _mapper.Map<MatchViewModel>(matchDetails);
-            //model.NumberOfGames = matchDetails.Games.Count();
+            Match theMatch = await _matchRepo.FindGamesAndGolfersInMatch(id);
+            IEnumerable<Golfer> golfers = theMatch.Games.SelectMany(g => g.GameGolfers).Select(g => g.Golfer).Distinct();
+            MatchScoresViewModel model = _mapper.Map<MatchScoresViewModel>(theMatch);
+            model.Golfers = _mapper.Map<IEnumerable<GolferViewModel>>(golfers);
             return View(model);
         }
 

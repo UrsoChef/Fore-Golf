@@ -22,12 +22,12 @@ namespace Fore_Golf.Controllers
         private readonly IGameGolferRepository _gameGolferRepo;
         private readonly IMapper _mapper;
 
-            public GameController(
-                IGolferRepository golferRepo, 
-                IGameRepository gameRepo, 
-                IMatchRepository matchRepo,
-                IGameGolferRepository gameGolferRepo, 
-                IMapper mapper)
+        public GameController(
+            IGolferRepository golferRepo,
+            IGameRepository gameRepo,
+            IMatchRepository matchRepo,
+            IGameGolferRepository gameGolferRepo,
+            IMapper mapper)
         {
             _golferRepo = golferRepo;
             _gameRepo = gameRepo;
@@ -63,7 +63,7 @@ namespace Fore_Golf.Controllers
                 Location = match.Location,
                 Match = match
             };
-            
+
             return View(model);
         }
 
@@ -84,7 +84,7 @@ namespace Fore_Golf.Controllers
                     ModelState.AddModelError("", "Create Game: No Match ID");
                     return View(model);
                 }
-                
+
                 model.Id = Guid.NewGuid();
                 var match = await _matchRepo.FindByID(model.MatchId);
                 //var game = _mapper.Map<Game>(model);
@@ -94,7 +94,7 @@ namespace Fore_Golf.Controllers
                     GameDate = model.GameDate,
                     Match = match,
                     Location = model.Location
-                };  
+                };
 
                 var isSuccess = await _gameRepo.Create(game);
 
@@ -103,30 +103,32 @@ namespace Fore_Golf.Controllers
                     ModelState.AddModelError("", "Create Game: Unable to Create a new game");
                     return View(model);
                 }
-
-                IEnumerable<GameGolfer> lastGame = await _gameGolferRepo.FindLatestGameandGolfersInMatch(game.MatchId, game.Id);
-                foreach (GameGolfer item in lastGame)
+                bool gameGolfersExist = await _gameGolferRepo.CheckGame(game.Id);
+                if (!gameGolfersExist)
                 {
-                    bool isExists = await _gameGolferRepo.CheckGolferInGame(game.Id, item.GolferId);
-                    if (!isExists)
+                    IEnumerable<GameGolfer> lastGame = await _gameGolferRepo.FindLatestGameandGolfersInMatch(game.MatchId, game.Id);
+                    foreach (GameGolfer item in lastGame)
                     {
-                        GameGolferViewModel newGolferInGame = new GameGolferViewModel
+                        bool isExists = await _gameGolferRepo.CheckGolferInGame(game.Id, item.GolferId);
+                        if (!isExists)
                         {
-                            Game = game,
-                            Golfer = item.Golfer,
-                            Score = 0,
-                        };
-                        var addGolfer = _mapper.Map<GameGolfer>(newGolferInGame);
-                        bool golferSuccess = await _gameGolferRepo.Create(addGolfer);
+                            GameGolferViewModel newGolferInGame = new GameGolferViewModel
+                            {
+                                Game = game,
+                                Golfer = item.Golfer,
+                                Score = 0,
+                            };
+                            var addGolfer = _mapper.Map<GameGolfer>(newGolferInGame);
+                            bool golferSuccess = await _gameGolferRepo.Create(addGolfer);
 
-                        if (!golferSuccess)
-                        {
-                            ModelState.AddModelError("", "Create Game: Unable to Copy a previous list of Golfers");
-                            continue;
+                            if (!golferSuccess)
+                            {
+                                ModelState.AddModelError("", "Create Game: Unable to Copy a previous list of Golfers");
+                                continue;
+                            }
                         }
                     }
                 }
-
 
                 //// ```pull all gameGolfer rows for a specific match
                 //IEnumerable<GameGolfer> gameGolfers = await _db.GameGolfers.Include(g => g.Golfer).Where(q => q.Game.MatchId == matchid).ToListAsync();
@@ -135,9 +137,9 @@ namespace Fore_Golf.Controllers
                 //                // return all golfers for the latest game I just created so that I can cope them over
                 //                return gameGolfers.Where(gg => gg.GameId == latestGame.GameId);```
                 Guid id = game.MatchId;
-                return RedirectToAction(nameof(Details), "Match", id);
+                return RedirectToAction(nameof(Details), "Match", new { id });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModelState.AddModelError("", "Create Game: Something went wrong in the game creation");
                 return View(model);
@@ -145,32 +147,32 @@ namespace Fore_Golf.Controllers
         }
 
         public async Task<ActionResult> ListGolfers(Guid id)
+        {
+            var isExists = await _gameRepo.IsExists(id);
+            if (!isExists)
             {
-                var isExists = await _gameRepo.IsExists(id);
-                if (!isExists)
-                {
-                    return NotFound();
-                }
-
-                var model = new List<GameGolferStatusViewModel>();
-
-                var golfers = await _golferRepo.FindAll();
-                var gameGolfers = (await _gameGolferRepo.FindAllGolfersInGame(id)).Select(gg => gg.Golfer.Id);
-                Game game = await _gameRepo.FindByID(id);
-
-                foreach (var golfer in golfers)
-                {
-                    model.Add(new GameGolferStatusViewModel()
-                    {
-                        MatchId = game.MatchId,
-                        GameId = id,
-                        Golfer = _mapper.Map<Golfer, GolferViewModel>(golfer),
-                        IsInGame = gameGolfers.Contains(golfer.Id),
-                    });
-                }
-
-                return View(model);
+                return NotFound();
             }
+
+            var model = new List<GameGolferStatusViewModel>();
+
+            var golfers = await _golferRepo.FindAll();
+            var gameGolfers = (await _gameGolferRepo.FindAllGolfersInGame(id)).Select(gg => gg.Golfer.Id);
+            Game game = await _gameRepo.FindByID(id);
+
+            foreach (var golfer in golfers)
+            {
+                model.Add(new GameGolferStatusViewModel()
+                {
+                    MatchId = game.MatchId,
+                    GameId = id,
+                    Golfer = _mapper.Map<Golfer, GolferViewModel>(golfer),
+                    IsInGame = gameGolfers.Contains(golfer.Id),
+                });
+            }
+
+            return View(model);
+        }
 
         public async Task<ActionResult> AddGolferToGame(Guid id, Guid golferid)
         {
@@ -211,12 +213,18 @@ namespace Fore_Golf.Controllers
                 return NotFound();
             }
 
-            var gameGolfers = await _gameGolferRepo.FindAllGolfersInGame(id);
-            GameScoresViewModel model = new GameScoresViewModel()
+            IEnumerable<GameGolfer> gameGolfers = await _gameGolferRepo.FindAllGolfersInGame(id);
+            IEnumerable<GameGolferViewModel> test = _mapper.Map<IEnumerable<GameGolferViewModel>>(gameGolfers);
+            GameGolferScoreViewModel model = new GameGolferScoreViewModel()
             {
-                GameId = id,
                 MatchId = gameGolfers.First().Game.MatchId,
-                GolferScores = _mapper.Map<IEnumerable<GolferScoreViewModel>>(gameGolfers),
+                Games = gameGolfers.First().Game,
+                GolferScores = test,
+                //Id = id,
+                //GameDate = gameGolfers.First().Game.GameDate,
+                //Location = gameGolfers.First().Game.Location,
+                //MatchId = gameGolfers.First().Game.MatchId,
+                //GameGolfers = _mapper.Map<IEnumerable<GameGolferViewModel>>(gameGolfers),
             };
 
             return View(model);
@@ -228,11 +236,15 @@ namespace Fore_Golf.Controllers
             var isExists = await _gameGolferRepo.CheckGame(id);
             if (!isExists)
             {
-                return NotFound();
+                Game noGolfers = await _gameRepo.FindByID(id);
+                TempData["Message"] = "There are no golfers in this game";
+                ModelState.AddModelError("", "Set Scores: Add golfers before setting their scores");
+                return RedirectToAction(nameof(Details), "Match", new { Id = noGolfers.MatchId });
             }
 
             IEnumerable<GameGolfer> gameGolfers = await _gameGolferRepo.FindAllGolfersInGame(id);
             Game game = await _gameRepo.FindByID(id);
+
             ICollection<SetScoreViewModel> model = _mapper.Map<ICollection<SetScoreViewModel>>(gameGolfers);
             foreach (var item in model)
             {
@@ -258,9 +270,7 @@ namespace Fore_Golf.Controllers
                     ModelState.AddModelError("", "Set Scores: No ID");
                     return View(model);
                 }
-                var golferGameIds = await _gameGolferRepo.FindGolferInGame(model.GameId, model.GolferId);
-                model.Id = golferGameIds.Id;
-                var gameGolfer = await _gameGolferRepo.FindByID(model.Id);
+                GameGolfer gameGolfer = await _gameGolferRepo.FindByID(model.Id);
                 gameGolfer.Score = model.Score;
                 var isSuccess = await _gameGolferRepo.Update(gameGolfer);
 
@@ -269,7 +279,7 @@ namespace Fore_Golf.Controllers
                     ModelState.AddModelError("", "Set Scores: Unable to update the score");
                     return View(model);
                 }
-                return RedirectToAction(nameof(SetScore),model.GameId);
+                return RedirectToAction(nameof(SetScore), new { id = model.GameId });
             }
             catch (Exception ex)
             {

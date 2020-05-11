@@ -18,4 +18,13 @@ namespace Fore_Golf.Models
         public int NumberOfGames { get; set; }
         public int NumberOfPlayers { get; set; }
     }
+
+    public class MatchScoresViewModel
+    {
+        public Guid Id { get; set; }
+        public int FinalGross { get; set; }
+        public int FinalNet { get; set; }
+        public IEnumerable<GolferViewModel> Golfers { get; set; } = new List<GolferViewModel>();
+        public IEnumerable<GameScoresViewModel> Games { get; set; } = new List<GameScoresViewModel>();
+    }
 }

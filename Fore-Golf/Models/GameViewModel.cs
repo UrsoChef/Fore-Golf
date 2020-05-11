@@ -20,4 +20,15 @@ namespace Fore_Golf.Models
         public Match Match { get; set; }
         public Guid MatchId { get; set; }
     }
+
+    public class GameScoresViewModel
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid MatchId { get; set; }
+        [Display(Name = "Game Date")]
+        public DateTime GameDate { get; set; }
+        public string Location { get; set; }
+        public IEnumerable<GameGolferViewModel> GameGolfers { get; set; }
+    }
+
 }

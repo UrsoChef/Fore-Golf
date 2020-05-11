@@ -12,12 +12,15 @@ namespace ForeGolf.Mapping
     {
         public MappingTable()
         {
-            CreateMap<Game, GameViewModel>().ReverseMap();
             CreateMap<Match, MatchViewModel>().ReverseMap();
-            CreateMap<Golfer, GolferViewModel>().ReverseMap();
+            CreateMap<Match, MatchScoresViewModel>().ReverseMap();
+            CreateMap<Game, GameViewModel>().ReverseMap();
+            CreateMap<Game, GameScoresViewModel>().ReverseMap();
+            CreateMap<Golfer, GolferViewModel>().ReverseMap(); 
             CreateMap<GameGolfer, GameGolferViewModel>().ReverseMap();
             CreateMap<GameGolfer, SetScoreViewModel>().ReverseMap();
-            CreateMap<GameGolfer, GolferScoreViewModel>().ReverseMap();
+            CreateMap<GameGolfer, GameGolferScoreViewModel>().ReverseMap();
+            CreateMap<GameGolfer, GameScoresViewModel>().ReverseMap();
         }
     }
 }
