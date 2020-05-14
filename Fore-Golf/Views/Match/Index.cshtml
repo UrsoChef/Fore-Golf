@@ -1,22 +1,22 @@
 ﻿@model IEnumerable<Fore_Golf.Models.MatchViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Matches";
 }
 
 <h1>Match Summary</h1>
 
 <p>
-    <a asp-action="Create">Create a new match</a>
+    <a class="btn btn-block btn-outline-primary" asp-action="Create"><i class="fas fa-plus"></i> Start a new match</a>
 </p>
 
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th valign="middle">
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th>
+            <th valign="middle">
                 @Html.DisplayNameFor(model => model.Location)
             </th>
             <th></th>
@@ -26,15 +26,15 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td valign="middle">
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
-                <td>
+                <td valign="middle">
                     @Html.DisplayFor(modelItem => item.Location)
                 </td>
                 <td>
-                    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Details</a>
+                    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a> |
+                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
                 </td>
             </tr>
         }

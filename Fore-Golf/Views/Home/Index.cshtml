@@ -21,12 +21,12 @@
         </div>
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#matchStatus">
             <div class="card-body">
-                <div class="row align-items-center">
+                <div class="row flex-row align-items-center">
                     @foreach (var item in Model)
                     {
                         if (item.Status == null)
                         {
-                            <div class="card" style="width: 18rem;">
+                            <div class="card flex-card" style="width: 18rem;">
                                 <div class="card-body">
                                     <a asp-route-id="@item.Id" asp-action="Details" asp-controller="Match" class="card-link">
                                         <h5 class="card-title">@item.Name</h5>
@@ -49,12 +49,12 @@
             </div>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#matchStatus">
                 <div class="card-body">
-                    <div class="row align-items-center">
+                    <div class="row flex-row align-items-center">
                         @foreach (var item in Model)
                         {
                             if (item.Status == true)
                             {
-                                <div class="card" style="width: 18rem;">
+                                <div class="card flex-card" style="width: 18rem;">
                                     <div class="card-body">
                                         <a asp-route-id="@item.Id" asp-action="Details" asp-controller="Match" class="card-link">
                                             <h5 class="card-title">@item.Name</h5>
@@ -78,12 +78,12 @@
             </div>
             <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#matchStatus">
                 <div class="card-body">
-                    <div class="row align-items-center">
+                    <div class="row flex-row align-items-center">
                         @foreach (var item in Model)
                         {
                             if (item.Status == false)
                             {
-                                <div class="card" style="width: 18rem;">
+                                <div class="card flex-card" style="width: 18rem;">
                                     <div class="card-body">
                                         <a asp-route-id="@item.Id" asp-action="Details" asp-controller="Match" class="card-link">
                                             <h5 class="card-title">@item.Name</h5>

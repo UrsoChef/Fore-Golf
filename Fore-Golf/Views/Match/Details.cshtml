@@ -4,13 +4,13 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>@Model.Name Details</h1>
 <p>
-    <a asp-action="Summary" asp-route-id="@Model.Id">View match summary</a>
+    <a asp-action="Summary" class="btn btn-info btn-block" asp-route-id="@Model.Id"><i class="fas fa-list-ol"></i> View summary</a>
 </p>
 
 <p>
-    <a asp-controller="Game" asp-action="Create" asp-route-matchid="@Model.Id">Create a new game for this match</a>
+    <a asp-controller="Game" asp-action="Create" asp-route-matchid="@Model.Id" class="btn btn-primary btn-block"><i class="fas fa-plus"></i> Play a new game for this match</a>
 </p>
 <table class="table">
     <thead>
@@ -35,10 +35,10 @@
                     @item.GameDate
                 </td>
                 <td>
-                    <a asp-action="ListGolfers" class="btn btn-outline-info" asp-controller="Game" asp-route-id="@item.Id">Select Golfers</a> |
-                    <a asp-action="SetScore" class="btn btn-primary" asp-controller="Game" asp-route-id="@item.Id">Enter Scores</a> |
-                    <a asp-action="ViewScores" class="btn btn-dark" asp-controller="Game" asp-route-id="@item.Id">View Scores</a> |
-                    <a asp-action="CopyGolfersFromLastGame" class="btn btn btn-outline-secondary" asp-route-matchid="@item.MatchId" asp-route-gameid="@item.Id">Copy</a>
+                    <a asp-action="ListGolfers" class="btn btn-outline-info" asp-controller="Game" asp-route-id="@item.Id"><i class="fas fa-users"></i></a> |
+                    <a asp-action="ViewScores" class="btn btn-dark" asp-controller="Game" asp-route-id="@item.Id"><i class="fas fa-eye"></i></a> |
+                    <a asp-action="SetScore" class="btn btn-primary" asp-controller="Game" asp-route-id="@item.Id"><i class="fas fa-file-alt"></i> Enter Scores</a> |
+                    <a asp-action="CopyGolfersFromLastGame" class="btn btn btn-outline-secondary" asp-route-matchid="@item.MatchId" asp-route-gameid="@item.Id"><i class="fas fa-copy"></i></a>
                 </td>
             </tr>
         }
