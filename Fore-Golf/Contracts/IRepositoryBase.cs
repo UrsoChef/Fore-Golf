@@ -7,7 +7,7 @@ namespace Fore_Golf.Interfaces
 {
     public interface IRepositoryBase<T> where T : class
     {
-        Task<ICollection<T>> FindAll();
+        Task<List<T>> FindAll();
         Task<T> FindByID(Guid id);
         Task<bool> IsExists(Guid id);
         Task<bool> Create(T entity);

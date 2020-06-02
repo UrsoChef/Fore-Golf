@@ -10,40 +10,71 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Edit @Model.Name' details</title>
+
 </head>
+
 <body>
+    <h1 class="text-center">@Model.Name</h1>
 
     <hr />
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-12">
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="DateJoined" />
-                <div class="form-group">
-                    <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control" />
+
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping"><i class="fas fa-user"></i></span>
+                    </div>
+                    <input type="text" asp-for="Name" class="form-control" value="@Model.Name" aria-label="Name" aria-describedby="addon-wrapping" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Handicap" class="control-label"></label>
-                    <input asp-for="Handicap" class="form-control" />
+                <br />
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping"><i class="fas fa-hashtag"></i></span>
+                    </div>
+                    <input type="number" asp-for="Handicap" class="form-control" value="@Model.Handicap" aria-label="Handicap" aria-describedby="addon-wrapping" />
                     <span asp-validation-for="Handicap" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Email" class="control-label"></label>
-                    <input asp-for="Email" class="form-control" />
+                <br />
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="addon-wrapping"><i class="fas fa-envelope"></i></span>
+                    </div>
+                    <input type="email" asp-for="Email" class="form-control" value="@Model.Email" aria-label="Email" aria-describedby="addon-wrapping" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
+                <br />
+
+
+
+                @*<div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Handicap" class="control-label"></label>
+                        <input asp-for="Handicap" class="form-control" />
+                        <span asp-validation-for="Handicap" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>*@
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <input type="submit" value="Save" class="btn btn-primary btn-block" />
                 </div>
             </form>
         </div>
     </div>
 
     <div>
-        <a asp-action="Index" class="btn btn-outline-info"><i class="fas fa-reply"></i> Back to List</a>
+        <a asp-action="Index" class="btn btn-outline-info btn-block"><i class="fas fa-reply"></i> Back to List</a>
     </div>
 
     @section Scripts {

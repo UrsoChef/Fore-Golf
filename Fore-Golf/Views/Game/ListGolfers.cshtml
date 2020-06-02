@@ -4,10 +4,11 @@
     ViewData["Title"] = "ListGolfers";
 }
 
-<h1>Golfer List</h1>
+<h1 class="text-center">Golfer List</h1>
 
-<a class="btn btn-outline-info" asp-controller="Match" asp-action="Details" asp-route-id="@Model.First().MatchId"><i class="fas fa-reply"></i> Return to match lobby</a>
-
+<hr />
+<a class="btn btn-outline-info btn-block" asp-controller="Match" asp-action="Details" asp-route-id="@Model.First().MatchId"><i class="fas fa-reply"></i> Return to match lobby</a>
+<br />
 <table class="table">
     <thead>
         <tr>
@@ -35,11 +36,11 @@
                 <td>
                     @if (item.IsInGame)
                     {
-                        <a class="btn btn-danger" asp-action="RemoveGolferFromGame" asp-route-id="@item.GameId" asp-route-golferid="@item.Golfer.Id">Remove Golfer</a>
+                        <a class="btn btn-success" asp-action="RemoveGolferFromGame" asp-route-id="@item.GameId" asp-route-golferid="@item.Golfer.Id"><i class="fas fa-check-square"></i></a>
                     }
                     else
                     {
-                        <a class="btn btn-success" asp-action="AddGolferToGame" asp-route-id="@item.GameId" asp-route-golferid="@item.Golfer.Id">Add Golfer</a>
+                        <a class="btn btn-danger text-center" asp-action="AddGolferToGame" asp-route-id="@item.GameId" asp-route-golferid="@item.Golfer.Id"><i class="fas fa-square"></i></a>
                     }
                     @*@Html.DisplayFor(modelItem => item.IsInGame)*@
                 </td>

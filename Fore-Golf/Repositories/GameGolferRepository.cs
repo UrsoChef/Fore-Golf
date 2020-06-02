@@ -40,7 +40,7 @@ namespace Fore_Golf.Repositories
             return await Save();
         }
 
-        public async Task<ICollection<GameGolfer>> FindAll()
+        public async Task<List<GameGolfer>> FindAll()
         {
             var golfers = await _db.GameGolfers.ToListAsync();
             return golfers;
@@ -60,7 +60,7 @@ namespace Fore_Golf.Repositories
             //return golfer;
         }
 
-        public async Task<IEnumerable<GameGolfer>> FindAllGolfersInGame(Guid gameid)
+        public async Task<List<GameGolfer>> FindAllGolfersInGame(Guid gameid)
         {
             return await _db.GameGolfers.Include(g => g.Golfer).Include(g => g.Game).Where(q => q.Game.Id == gameid).ToListAsync();
             //var golfers = await FindAll();
@@ -68,7 +68,7 @@ namespace Fore_Golf.Repositories
             //return golfersInGame;
         }
 
-        public async Task<ICollection<GameGolfer>> FindGame(Guid gameid)
+        public async Task<List<GameGolfer>> FindGame(Guid gameid)
         {
             return await _db.GameGolfers.Where(q => q.Game.Id == gameid).ToListAsync();
         }
@@ -91,21 +91,35 @@ namespace Fore_Golf.Repositories
             return await Save();
         }
 
-        public async Task<IEnumerable<GameGolfer>> FindAllInMatch(Guid matchid)
+        public async Task<List<GameGolfer>> FindAllInMatch(Guid matchid)
         {
             return await _db.GameGolfers.Include(g => g.Golfer).Where(q => q.Game.MatchId == matchid).ToListAsync();
         }
 
-        public async Task<IEnumerable<GameGolfer>> FindLatestGameandGolfersInMatch(Guid matchid, Guid gameid)
+        public async Task<List<GameGolfer>> FindLatestGameandGolfersInMatch(Guid matchid, Guid gameid)
         {
             //objective of this function is to 
             //> take gameid input (consider taking matchid instead of game?)
             //> find all the games under the match with this gameid 
             //> find last game amongst list
             //> return latest gamegolfer list, ket is golfers
-            IEnumerable<GameGolfer> gameGolfers = await _db.GameGolfers.Include(g => g.Golfer).Where(q => q.Game.MatchId == matchid).ToListAsync();
-            GameGolfer latestGame = gameGolfers.Where(g => g.GameId != gameid).Last();
-            return gameGolfers.Where(gg => gg.GameId == latestGame.GameId);
+
+            Game game = await _db.Games.FindAsync(gameid);
+            List<Game> gamesPerMatch = await _db.Games.Include(m => m.Match).ToListAsync();
+            gamesPerMatch.Sort((x, y) => DateTime.Compare(x.GameDate, y.GameDate));
+            int thisGame = gamesPerMatch.FindIndex(g => g.Id == gameid);
+            Game lastGame = game;
+            if (thisGame > 0)
+            {
+                lastGame = gamesPerMatch[thisGame - 1];
+            }
+            List<GameGolfer> gameGolfers = await _db.GameGolfers.Where(q => q.Game == lastGame).Include(g => g.Golfer).ToListAsync();
+            return gameGolfers;
+
+
+            //List<GameGolfer> gameGolfers = await _db.GameGolfers.Include(g => g.Golfer).Where(q => q.Game.MatchId == matchid).ToListAsync();
+            //GameGolfer latestGame = gameGolfers.Where(g => g.GameId != gameid).Last();
+            //return gameGolfers.Where(gg => gg.GameId == latestGame.GameId);
         }
     }
 }

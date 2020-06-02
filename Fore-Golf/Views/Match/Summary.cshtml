@@ -4,11 +4,12 @@
     ViewData["Title"] = "Summary";
 }
 
-<h1>Summary</h1>
+<h1 class="text-center">Match Summary</h1>
 
+<hr />
 <a class="btn btn-block btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id"><i class="fas fa-reply"></i> Return to match lobby</a>
-<br/>
-<br/>
+<br />
+<br />
 <table class="table">
     <thead>
         <tr>
@@ -53,36 +54,16 @@
     <tbody>
         @foreach (var item in Model.Golfers)
         {
-        <tr>
-            <td>
-                @item.Name
-            </td>
-            <td>
-                @item.Handicap
-            </td>
-            @foreach (var game in Model.Games)
-            {
-                @if (!game.GameGolfers.Any(g => g.Golfer.Id == item.Id))
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Handicap
+                </td>
+                @foreach (var game in Model.Games)
                 {
-                    <td>
-                        DNP
-                    </td>
-                    <td>
-                        DNP
-                    </td>
-                }
-                @foreach (var gamegolfer in game.GameGolfers)
-                {
-                    @if (gamegolfer.Golfer.Id == item.Id && gamegolfer.Score > 0)
-                    {
-                        <td>
-                            @gamegolfer.Score
-                        </td>
-                        <td>
-                            @gamegolfer.NetScore
-                        </td>
-                    }
-                    @if (gamegolfer.Score == 0)
+                    @if (!game.GameGolfers.Any(g => g.Golfer.Id == item.Id))
                     {
                         <td>
                             DNP
@@ -91,15 +72,35 @@
                             DNP
                         </td>
                     }
+                    @foreach (var gamegolfer in game.GameGolfers)
+                    {
+                        @if (gamegolfer.Golfer.Id == item.Id && gamegolfer.Score > 0)
+                        {
+                            <td>
+                                @gamegolfer.Score
+                            </td>
+                            <td>
+                                @gamegolfer.NetScore
+                            </td>
+                        }
+                        @if (gamegolfer.Score == 0)
+                        {
+                            <td>
+                                DNP
+                            </td>
+                            <td>
+                                DNP
+                            </td>
+                        }
+                    }
                 }
-            }
-            <td>
-                @Model.Games.SelectMany(g => g.GameGolfers).Where(gg => gg.Golfer.Id == item.Id).Sum(s => s.Score)
-            </td>
-            <td>
-                @Model.Games.SelectMany(g => g.GameGolfers).Where(gg => gg.Golfer.Id == item.Id).Sum(s => s.NetScore)
-            </td>
-        </tr>
+                <td>
+                    @Model.Games.SelectMany(g => g.GameGolfers).Where(gg => gg.Golfer.Id == item.Id).Sum(s => s.Score)
+                </td>
+                <td>
+                    @Model.Games.SelectMany(g => g.GameGolfers).Where(gg => gg.Golfer.Id == item.Id).Sum(s => s.NetScore)
+                </td>
+            </tr>
         }
     </tbody>
 </table>

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Matches";
 }
 
-<h1>Match Summary</h1>
+<h1 class="text-center">Match Summary</h1>
 
 <p>
     <a class="btn btn-block btn-outline-primary" asp-action="Create"><i class="fas fa-plus"></i> Start a new match</a>
@@ -13,13 +13,13 @@
 <table class="table">
     <thead>
         <tr>
-            <th valign="middle">
+            <th valign="middle" align="center">
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th valign="middle">
+            <th valign="middle" align="center">
                 @Html.DisplayNameFor(model => model.Location)
             </th>
-            <th></th>
+            <th align="center">Status</th>
         </tr>
     </thead>
     <tbody>
@@ -27,15 +27,35 @@
         {
             <tr>
                 <td valign="middle">
-                    @Html.DisplayFor(modelItem => item.Name)
+                    <a asp-action="Details" class="btn" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                 </td>
                 <td valign="middle">
-                    @Html.DisplayFor(modelItem => item.Location)
+                    <a asp-action="Details" class="btn" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Location)</a>
                 </td>
-                <td>
-                    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a> |
-                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
-                </td>
+                @if (item.Status == true)
+                {
+                    <td valign="middle" align="center">
+                        <a class="btn btn-outline-success btn-block text-success" aria-disabled="true">
+                            Completed
+                        </a>
+                    </td>
+                }
+                @if (item.Status == false)
+                {
+                    <td valign="middle" align="center">
+                        <a class="btn btn-outline-dark btn-block" aria-disabled="true">
+                            Canceled
+                        </a>
+                    </td>
+                }
+                @if (item.Status == null)
+                {
+                    <td valign="middle" align="center">
+                        <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a> |
+                        <a asp-action="Complete" class="btn btn-success" asp-route-id="@item.Id"><i class="fas fa-check"></i></a> |
+                        <a asp-action="Cancel" class="btn btn-dark" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to cancel this match?')"><i class="fas fa-ban"></i></a>
+                    </td>
+                }
             </tr>
         }
     </tbody>

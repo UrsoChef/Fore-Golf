@@ -30,7 +30,7 @@ namespace Fore_Golf.Repositories
             return await Save();
         }
 
-        public async Task<ICollection<Match>> FindAll()
+        public async Task<List<Match>> FindAll()
         {
             var matches = await _db.Matches.ToListAsync();
             return matches;
@@ -44,7 +44,7 @@ namespace Fore_Golf.Repositories
 
         public async Task<Match> FindGamesAndGolfersInMatch(Guid id)
         {
-            var matches = await _db.Matches.Include(m => m.Games).ThenInclude(g => g.GameGolfers).ThenInclude(gg => gg.Golfer).FirstOrDefaultAsync(m => m.Id == id);
+            Match matches = await _db.Matches.Include(m => m.Games).ThenInclude(g => g.GameGolfers).ThenInclude(gg => gg.Golfer).FirstOrDefaultAsync(m => m.Id == id);
             return matches;
         }
         public async Task<IEnumerable<Golfer>> FindGolfersInMatch(Guid id)

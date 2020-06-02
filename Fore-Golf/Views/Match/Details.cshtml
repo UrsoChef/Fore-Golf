@@ -4,7 +4,31 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>@Model.Name Details</h1>
+<h1 class="text-center">@Model.Name</h1> <br />
+@if (@Model.Status == true)
+{
+    <div class="alert alert-success" role="alert" align="center">
+        <h4>
+            Completed
+        </h4>
+    </div>
+}
+@if (@Model.Status == false)
+{
+    <div class="alert alert-danger" role="alert" align="center">
+        <h4>
+            Canceled
+        </h4>
+    </div>
+}
+@if (@Model.Status == null)
+{
+    <div class="alert alert-primary" role="alert" align="center">
+        <h4>
+            Active
+        </h4>
+    </div>
+}
 <p>
     <a asp-action="Summary" class="btn btn-info btn-block" asp-route-id="@Model.Id"><i class="fas fa-list-ol"></i> View summary</a>
 </p>
@@ -29,16 +53,15 @@
         {
             <tr>
                 <td>
-                    @item.Location
+                    <a asp-action="ViewScores" class="btn" asp-controller="Game" asp-route-id="@item.Id">@item.Location</a>
                 </td>
-                <td>
+                <td valign="middle">
                     @item.GameDate
                 </td>
                 <td>
                     <a asp-action="ListGolfers" class="btn btn-outline-info" asp-controller="Game" asp-route-id="@item.Id"><i class="fas fa-users"></i></a> |
-                    <a asp-action="ViewScores" class="btn btn-dark" asp-controller="Game" asp-route-id="@item.Id"><i class="fas fa-eye"></i></a> |
-                    <a asp-action="SetScore" class="btn btn-primary" asp-controller="Game" asp-route-id="@item.Id"><i class="fas fa-file-alt"></i> Enter Scores</a> |
-                    <a asp-action="CopyGolfersFromLastGame" class="btn btn btn-outline-secondary" asp-route-matchid="@item.MatchId" asp-route-gameid="@item.Id"><i class="fas fa-copy"></i></a>
+                    <a asp-action="SetScore" class="btn btn-primary" asp-controller="Game" asp-route-id="@item.Id"><i class="fas fa-file-alt"></i></a> @*|
+                        <a asp-action="CopyGolfersFromLastGame" class="btn btn btn-outline-secondary" asp-route-matchid="@item.MatchId" asp-route-gameid="@item.Id"><i class="fas fa-copy"></i></a>*@
                 </td>
             </tr>
         }

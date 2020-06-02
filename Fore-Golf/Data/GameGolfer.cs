@@ -15,6 +15,7 @@ namespace Fore_Golf.Data
         //[ForeignKey("GolferId")]
         public Golfer Golfer { get; set; }
         public Guid GolferId { get; set; }
+        public int GameHandicap { get; set; }
         public int Score { get; set; }
     }
 }

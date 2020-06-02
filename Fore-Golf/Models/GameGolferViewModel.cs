@@ -11,8 +11,9 @@ namespace Fore_Golf.Models
         public Guid Id { get; set; }
         public Game Game { get; set; }
         public Golfer Golfer { get; set; }
+        public int GameHandicap { get; set; }
         public int Score { get; set; }
-        public int NetScore { get => Score - Golfer.Handicap; }
+        public int NetScore { get => Score - GameHandicap; }
     }
 
     public class GameGolferStatusViewModel
@@ -20,6 +21,7 @@ namespace Fore_Golf.Models
         public Guid MatchId { get; set; }
         public Guid GameId { get; set; }
         public GolferViewModel Golfer { get; set; }
+        public int GameHandicap { get; set; }
         public bool IsInGame { get; set; } = false;
     }
 
@@ -29,20 +31,22 @@ namespace Fore_Golf.Models
         public Guid MatchId { get; set; }
         public Guid GameId { get; set; }
         public Golfer Golfer { get; set; }
+        public int GameHandicap { get; set; }
         public int Score { get; set; }
-        public int NetScore { get => Score - Golfer.Handicap; }
+        public int NetScore { get => Score - GameHandicap; }
     }
     public class GameGolferScoreViewModel
     {
         public Guid MatchId { get; set; }
         public Game Games { get; set; }
-        public IEnumerable<GameGolferViewModel> GolferScores { get; set; }
+        public List<GameGolferViewModel> GolferScores { get; set; }
     }
 
     public class GolferScoreViewModel
     {
+        public int GameHandicap { get; set; }
         public Golfer Golfer { get; set; }
         public int Score { get; set; }
-        public int NetScore { get => Score - Golfer.Handicap; }
+        public int NetScore { get => Score - GameHandicap; }
     }
 }

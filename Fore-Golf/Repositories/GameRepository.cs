@@ -1,6 +1,8 @@
 ﻿using Fore_Golf.Contracts;
 using Fore_Golf.Data;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +31,7 @@ namespace Fore_Golf.Repositories
             return await Save();
         }
 
-        public async Task<ICollection<Game>> FindAll()
+        public async Task<List<Game>> FindAll()
         {
             var games = await _db.Games.ToListAsync();
             return games;
@@ -41,12 +43,28 @@ namespace Fore_Golf.Repositories
             return game;
         }
 
-        public async Task<ICollection<Game>> GetGamesInMatch(Guid matchid)
+        public async Task<List<Game>> GetGamesInMatch(Guid matchid)
         {
-            return await _db.Games.Include(g => g.MatchId).Where(q => q.MatchId == matchid).ToListAsync();
+            return await _db.Games.Include(g => g.Match).Where(q => q.MatchId == matchid).ToListAsync();
         }
 
-        public Task<ICollection<Game>> GetScoreByGolferandMatch(Guid id)
+        public async Task<Game> GetPreviousGame(Guid id)
+        {
+            Game game = await _db.Games.FindAsync(id);
+            List<Game> gamesPerMatch = await _db.Games.Include(m => m.MatchId == game.MatchId).ToListAsync();
+            int thisGame = gamesPerMatch.FindIndex(g => g.Id == id);
+            if (thisGame > 0)
+            {
+                Game lastGame = gamesPerMatch[thisGame - 1];
+                return lastGame;
+            }
+            else
+            {
+                return game;
+            }
+        }
+
+        public Task<List<Game>> GetScoreByGolferandMatch(Guid id)
         {
             throw new NotImplementedException();
         }

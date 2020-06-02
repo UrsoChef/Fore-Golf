@@ -14,7 +14,7 @@ namespace Fore_Golf.Models
         public string Location { get; set; }
         public bool? Status { get; set; }
         public IEnumerable<GolferViewModel> Golfers { get; set; } = new List<GolferViewModel>();
-        public IEnumerable<GameViewModel> Games { get; set; } = new List<GameViewModel>();
+        public List<GameViewModel> Games { get; set; } = new List<GameViewModel>();
         public int NumberOfGames { get; set; }
         public int NumberOfPlayers { get; set; }
     }
@@ -25,6 +25,6 @@ namespace Fore_Golf.Models
         public int FinalGross { get; set; }
         public int FinalNet { get; set; }
         public IEnumerable<GolferViewModel> Golfers { get; set; } = new List<GolferViewModel>();
-        public IEnumerable<GameScoresViewModel> Games { get; set; } = new List<GameScoresViewModel>();
+        public List<GameScoresViewModel> Games { get; set; } = new List<GameScoresViewModel>();
     }
 }

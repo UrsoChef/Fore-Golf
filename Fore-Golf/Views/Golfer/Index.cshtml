@@ -12,38 +12,66 @@
     <title>Index</title>
 </head>
 <body>
-<p>
-    <a class="btn btn-block btn-outline-primary" asp-action="Create"><i class="fas fa-user-plus"></i> Add a new golfer</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th align="center">
-                @Html.DisplayNameFor(model => model.Handicap)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td align="center">
-                @Html.DisplayFor(modelItem => item.Handicap)
-            </td>
-            <td>
-                <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id"><i class="fas fa-user-edit"></i></a> |
-                <a asp-action="Details" class="btn btn-success" asp-route-id="@item.Id"><i class="fas fa-info"></i></a>
-                @*<a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to remove this golfer?')">Delete</a>*@
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <h1 class="text-center">Golfer List</h1>
+
+    <hr />
+    <p>
+        <a class="btn btn-block btn-outline-primary" asp-action="Create"><i class="fas fa-user-plus"></i> Add a new golfer</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th align="center">
+                    @Html.DisplayNameFor(model => model.Handicap)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Details" class="btn" asp-route-id="@item.Id">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </a>
+                    </td>
+                    <td align="center">
+                        <a asp-action="Details" class="btn" asp-route-id="@item.Id">
+                            @Html.DisplayFor(modelItem => item.Handicap)
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id"><i class="fas fa-user-edit"></i></a>
+                        @*<a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to remove this golfer?')">Delete</a>*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @*<div>
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-row">
+                    <div class="col">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Handicap" class="control-label"></label>
+                        <input asp-for="Handicap" class="form-control" />
+                        <span asp-validation-for="Handicap" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>*@
 </body>
 </html>

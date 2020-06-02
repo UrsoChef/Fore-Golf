@@ -9,8 +9,8 @@ namespace Fore_Golf.Contracts
 {
     public interface IGameRepository : IRepositoryBase<Game>
     {
-        Task<ICollection<Game>> GetScoreByGolferandMatch(Guid id);
-        Task<ICollection<Game>> GetGamesInMatch(Guid id);
-
+        Task<List<Game>> GetScoreByGolferandMatch(Guid id);
+        Task<List<Game>> GetGamesInMatch(Guid id);
+        Task<Game> GetPreviousGame(Guid id);
     }
 }

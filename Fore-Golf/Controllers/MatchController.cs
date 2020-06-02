@@ -8,6 +8,7 @@ using Fore_Golf.Data;
 using Fore_Golf.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Fore_Golf.Controllers
 {
@@ -178,6 +179,64 @@ namespace Fore_Golf.Controllers
             {
                 // TODO: Add delete logic here
 
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // POST: Match/Cancel/5
+        public async Task<ActionResult> Complete(Guid id)
+        {
+            try
+            {
+                // TODO: Add delete logic here
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("", "Create Match: Model state is invalid");
+                    return View();
+                }
+
+                Match match = await _matchRepo.FindByID(id);
+                match.Status = true;
+                bool isSuccess = await _matchRepo.Update(match);
+
+                if (!isSuccess)
+                {
+                    ModelState.AddModelError("", "Create Match: Unable to Complete match");
+                    return View();
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // POST: Match/Cancel/5
+        public async Task<ActionResult> Cancel(Guid id)
+        {
+            try
+            {
+                // TODO: Add delete logic here
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("", "Create Match: Model state is invalid");
+                    return View();
+                }
+
+                Match match = await _matchRepo.FindByID(id);
+                match.Status = false;
+                bool isSuccess = await _matchRepo.Update(match);
+
+                if (!isSuccess)
+                {
+                    ModelState.AddModelError("", "Create Match: Unable to Cancel match");
+                    return View();
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch

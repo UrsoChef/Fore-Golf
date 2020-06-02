@@ -4,10 +4,11 @@
     ViewData["Title"] = "SetScore";
 }
 
-<h1>Enter player scores</h1>
+<h1 class="text-center">Enter golfer scores</h1>
 
-<a class="btn btn-outline-info" asp-controller="Match" asp-action="Details" asp-route-id="@Model.First().MatchId"><i class="fas fa-reply"></i> Return to match lobby</a>
-
+<hr />
+<a class="btn btn-outline-info btn-block" asp-controller="Match" asp-action="Details" asp-route-id="@Model.First().MatchId"><i class="fas fa-reply"></i> Return to match lobby</a>
+<br />
 <table class="table">
     <thead>
         <tr>
@@ -27,10 +28,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Golfer.Name)
+                    @item.Golfer.Name
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Golfer.Handicap)
+                    @item.GameHandicap
                 </td>
                 <td>
                     <form class="form-inline" method="post">

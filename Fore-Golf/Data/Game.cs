@@ -12,8 +12,9 @@ namespace Fore_Golf.Data
         public Guid Id { get; set; }
         public DateTime GameDate { get; set; }
         public string Location { get; set; }
+        public bool Status { get; set; } = false;
         public Match Match { get; set; }
         public Guid MatchId { get; set; }
-        public IEnumerable<GameGolfer> GameGolfers { get; set; } = new List<GameGolfer>();
+        public List<GameGolfer> GameGolfers { get; set; } = new List<GameGolfer>();
     }
 }

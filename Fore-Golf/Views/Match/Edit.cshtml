@@ -4,33 +4,52 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit Match @Model.Name</h1>
+<h1 class="text-center">Edit match @Model.Name</h1>
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" placeholder="@Model.Name" />
+
+            <div class="input-group flex-nowrap">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="addon-wrapping"><i class="fas fa-golf-ball"></i></span>
+                </div>
+                <input asp-for="Name" class="form-control" value="@Model.Name" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" placeholder="@Model.Location" />
+            <br />
+            <div class="input-group flex-nowrap">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="addon-wrapping"><i class="fas fa-search-location"></i></span>
+                </div>
+                <input asp-for="Location" class="form-control" value="@Model.Location" />
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
+            <br />
+
+
+            @*<div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" placeholder="@Model.Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Location" class="control-label"></label>
+            <input asp-for="Location" class="form-control" placeholder="@Model.Location" />
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary btn-block" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index" class="btn btn-outline-info"><i class="fas fa-reply"></i> Back to Matches</a>
+    <a asp-action="Index" class="btn btn-outline-info btn-block"><i class="fas fa-reply"></i> Back to Matches</a>
 </div>
 
 @section Scripts {

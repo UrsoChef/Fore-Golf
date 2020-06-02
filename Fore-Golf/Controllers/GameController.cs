@@ -86,6 +86,8 @@ namespace Fore_Golf.Controllers
                 }
 
                 model.Id = Guid.NewGuid();
+                List<Game> gamesInMatch = await _gameRepo.GetGamesInMatch(model.MatchId);
+                int numberOfGames = gamesInMatch.Count();
                 var match = await _matchRepo.FindByID(model.MatchId);
                 //var game = _mapper.Map<Game>(model);
                 var game = new Game
@@ -104,9 +106,9 @@ namespace Fore_Golf.Controllers
                     return View(model);
                 }
                 bool gameGolfersExist = await _gameGolferRepo.CheckGame(game.Id);
-                if (!gameGolfersExist)
+                if (!gameGolfersExist && numberOfGames > 0)
                 {
-                    IEnumerable<GameGolfer> lastGame = await _gameGolferRepo.FindLatestGameandGolfersInMatch(game.MatchId, game.Id);
+                    List<GameGolfer> lastGame = await _gameGolferRepo.FindLatestGameandGolfersInMatch(game.MatchId, game.Id);
                     foreach (GameGolfer item in lastGame)
                     {
                         bool isExists = await _gameGolferRepo.CheckGolferInGame(game.Id, item.GolferId);
@@ -116,7 +118,7 @@ namespace Fore_Golf.Controllers
                             {
                                 Game = game,
                                 Golfer = item.Golfer,
-                                Score = 0,
+                                GameHandicap = item.GameHandicap,
                             };
                             var addGolfer = _mapper.Map<GameGolfer>(newGolferInGame);
                             bool golferSuccess = await _gameGolferRepo.Create(addGolfer);
@@ -129,20 +131,13 @@ namespace Fore_Golf.Controllers
                         }
                     }
                 }
-
-                //// ```pull all gameGolfer rows for a specific match
-                //IEnumerable<GameGolfer> gameGolfers = await _db.GameGolfers.Include(g => g.Golfer).Where(q => q.Game.MatchId == matchid).ToListAsync();
-                //                // give me the last game played from the list of games in a match, EXCLUDING the new game I just created *gameid*
-                //                GameGolfer latestGame = gameGolfers.Where(g => g.GameId != gameid).Last();
-                //                // return all golfers for the latest game I just created so that I can cope them over
-                //                return gameGolfers.Where(gg => gg.GameId == latestGame.GameId);```
                 Guid id = game.MatchId;
                 return RedirectToAction(nameof(Details), "Match", new { id });
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "Create Game: Something went wrong in the game creation");
-                return View(model);
+                return RedirectToAction(nameof(Index), "Match");
             }
         }
 
@@ -179,10 +174,13 @@ namespace Fore_Golf.Controllers
             var isExists = await _gameGolferRepo.CheckGolferInGame(id, golferid);
             if (!isExists)
             {
-                var newGolferInGame = new GameGolferViewModel
+                Golfer golfer = await _golferRepo.FindByID(golferid);
+                Game game = await _gameRepo.FindByID(id);
+                GameGolferViewModel newGolferInGame = new GameGolferViewModel
                 {
-                    Game = await _gameRepo.FindByID(id),
-                    Golfer = await _golferRepo.FindByID(golferid),
+                    Game = game,
+                    Golfer = golfer,
+                    GameHandicap = golfer.Handicap,
                 };
                 var addGolfer = _mapper.Map<GameGolfer>(newGolferInGame);
                 await _gameGolferRepo.Create(addGolfer);
@@ -213,20 +211,16 @@ namespace Fore_Golf.Controllers
                 return NotFound();
             }
 
-            IEnumerable<GameGolfer> gameGolfers = await _gameGolferRepo.FindAllGolfersInGame(id);
-            IEnumerable<GameGolferViewModel> test = _mapper.Map<IEnumerable<GameGolferViewModel>>(gameGolfers);
+            List<GameGolfer> gameGolfers = await _gameGolferRepo.FindAllGolfersInGame(id);
+            List<GameGolferViewModel> test = _mapper.Map<List<GameGolferViewModel>>(gameGolfers);
+            test = test.OrderBy(t => t.NetScore).ToList();
             GameGolferScoreViewModel model = new GameGolferScoreViewModel()
             {
                 MatchId = gameGolfers.First().Game.MatchId,
                 Games = gameGolfers.First().Game,
                 GolferScores = test,
-                //Id = id,
-                //GameDate = gameGolfers.First().Game.GameDate,
-                //Location = gameGolfers.First().Game.Location,
-                //MatchId = gameGolfers.First().Game.MatchId,
-                //GameGolfers = _mapper.Map<IEnumerable<GameGolferViewModel>>(gameGolfers),
             };
-
+            
             return View(model);
         }
 

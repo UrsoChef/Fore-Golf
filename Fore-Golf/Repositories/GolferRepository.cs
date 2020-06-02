@@ -30,7 +30,7 @@ namespace Fore_Golf.Repositories
             return await Save();
         }
 
-        public async Task<ICollection<Golfer>> FindAll()
+        public async Task<List<Golfer>> FindAll()
         {
             var golfers =await _db.Golfers.ToListAsync();
             return golfers;

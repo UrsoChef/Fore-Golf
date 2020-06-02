@@ -4,37 +4,47 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Add a new golfer</h1>
+<h1 class="text-center">Add a new golfer</h1>
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+
+            <div class="input-group flex-nowrap">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="addon-wrapping"><i class="fas fa-user"></i></span>
+                </div>
+                <input type="text" asp-for="Name" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="addon-wrapping" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Handicap" class="control-label"></label>
-                <input asp-for="Handicap" class="form-control" />
+            <br />
+            <div class="input-group flex-nowrap">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="addon-wrapping"><i class="fas fa-hashtag"></i></span>
+                </div>
+                <input type="number" asp-for="Handicap" class="form-control" placeholder="Handicap" aria-label="Handicap" aria-describedby="addon-wrapping" />
                 <span asp-validation-for="Handicap" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+            <br />
+            <div class="input-group flex-nowrap">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="addon-wrapping"><i class="fas fa-envelope"></i></span>
+                </div>
+                <input type="email" asp-for="Email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary btn-block" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index" class="btn btn-outline-info"><i class="fas fa-reply"></i> Back to List</a>
+    <a asp-action="Index" class="btn btn-outline-info btn-block"><i class="fas fa-reply"></i> Back to List</a>
 </div>
 
 @section Scripts {
